@@ -66,6 +66,7 @@ izbor_elementov_header = ["    Datum    ", " Recept ", "Sarže", "Bitumen Rec", 
                           "Mineral OS Izd", "Frezani Rec", "Frezani Izd", "Aditiv Rec", "Aditiv Izd",
                           "K1 Rec", "K1 Izd", "K2 Rec", "K2 Izd", "K3 Rec", "K3 Izd", "K4 Rec", "K4 Izd",
                           "K5 Rec", "K5 Izd", "K6 Rec", "K6 Izd"]
+
 izracun_table = sg.Table(values=rows, headings=izbor_elementov_header,
                          auto_size_columns=True, expand_x=True, num_rows=25, vertical_scroll_only=False,
                          justification='center', key="izracun", visible=False, alternating_row_color="green",
