@@ -2,6 +2,7 @@ from copy import deepcopy
 import PySimpleGUI as sg
 import pyodbc
 import pandas as pd
+import datetime
 
 from layout import izbor_elementov_header, layout
 
@@ -23,21 +24,6 @@ izb_k4 = True
 izb_k5 = True
 izb_k6 = True
 
-#-------------------------------------------#
-#             spremenljivke za layout       #
-#-------------------------------------------#
-
-# Za izbrisati
-# Do tukaj
-
-#------------------------------------------------#
-#                  Kolendar                      #
-#------------------------------------------------#
-
-#------------------------------------------------#
-#               tabela in checkboxi              #
-#------------------------------------------------#
-
 window = sg.Window('Statistika 0.1', layout, size=(800, 600), resizable=True, finalize=True)
 window.maximize()
 
@@ -49,6 +35,10 @@ vse_vrednosti_receptov_po_receptu = {}
 vse_vrednosti_dolocenega_recepta = {}
 vse_vrednosti_dolocenega_recepta_list = []
 new_list = []
+izbira_prikaza_vrstic = 1   #1 = dnevno, 2 = Datumsko od do, 3 = vse
+dan_za_prikaz = "" #za izbiro 1
+dan_od_za_prikaz = ""
+dan_do_za_prikaz = ""
 
 def dodaj_vrstico(val = ""):
     displaycolumns = deepcopy(izbor_elementov_header)
@@ -135,7 +125,7 @@ while True:
             window["izracun"].update(visible=False)
 
 #---------------------------------------------------#
-#           gumb poberi podatke                     #
+#           gumb poberi recepte                     #
 #---------------------------------------------------#
     elif event == "podatki":
         if povezava_vzpostavljena == 1:
@@ -152,16 +142,18 @@ while True:
 
             recepti = []
             recepti_vsi_podatki = []
+            if izbira_prikaza_vrstic == 1:
+                for index, row in df3.iterrows():
+                    if row["Val"] not in recepti:
+                        if row["Val"] != None:
+                            recepti.append(row["Val"])
+                            recepti_vsi_podatki.append(row)
 
-            for index, row in df3.iterrows():
-                if row["Val"] not in recepti:
-                    if row["Val"] != None:
-                        recepti.append(row["Val"])
-                        recepti_vsi_podatki.append(row)
+                        #print(recepti)
 
-                    #print(recepti)
+                window["recepti"].update(values=recepti)
 
-            window["recepti"].update(values=recepti)
+
 
 #-----------------------------------------------#
 #             izbor checkboxov                  #
@@ -402,14 +394,39 @@ while True:
                 yy=yy+1
             xx=xx+1
 
-        print("_________________________________________________________________________")
-        print("_________________________________________________________________________")
-
         window["izracun"].update(values = new_list)
 
 #------------------------------------------------------
 #
 #------------------------------------------------------
+    elif event == "izborcombo":
+        if values["izborcombo"] == "Dnevno":
+            izbira_prikaza_vrstic = 1
+            window["kolendarod"].update(visible=False)
+            window["kolendardo"].update(visible=False)
+            window["kolendar_input_od"].update(visible=False)
+            window["kolendar_input_do"].update(visible=False)
+
+            window["kolendardnevno"].update(visible=True)
+            window["kolendar_dnevno"].update(visible=True)
+        elif values["izborcombo"] == "Datumsko":
+            izbira_prikaza_vrstic = 2
+            window["kolendarod"].update(visible=True)
+            window["kolendar_input_od"].update(visible=True)
+            window["kolendardo"].update(visible=True)
+            window["kolendar_input_do"].update(visible=True)
+
+            window["kolendardnevno"].update(visible=False)
+            window["kolendar_dnevno"].update(visible=False)
+        elif values["izborcombo"] == "Celoten prikaz":
+            izbira_prikaza_vrstic = 3
+            window["kolendarod"].update(visible=False)
+            window["kolendardo"].update(visible=False)
+            window["kolendar_input_od"].update(visible=False)
+            window["kolendar_input_do"].update(visible=False)
+
+            window["kolendardnevno"].update(visible=False)
+            window["kolendar_dnevno"].update(visible=False)
 
         """elif event == "tfiler":
         try: 

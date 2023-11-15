@@ -22,6 +22,7 @@ connect_button = sg.Button("Poveži se", key="connect")
 #------------------------------#
 #      Samo za test            #
 #------------------------------#
+# kasneje izbriši
 rows = []
 header = ["TagName", "TagIndex", "TagType", "TagDataType"]
 tagi_table = sg.Table(values=rows, headings=header,
@@ -31,17 +32,40 @@ tagi_table = sg.Table(values=rows, headings=header,
 #------------------------------#
 #      Izbira datuma           #
 #------------------------------#
+izbor_combo = sg.Combo(["Dnevno", "Datumsko", "Celoten prikaz"], size=(20,3),
+                       enable_events=True, key='izborcombo', default_value="Dnevno")
 
-kolendar_od_prikaz = sg.Input(key="kolendar_input_od", enable_events=True)
-kolendar_od = sg.CalendarButton("Koledar", pad=None, key="kolendarod", target="kolendar_input_od",
-                                font=('MS Sans Serif', 10, 'bold'), format=('%Y-%m-%d 00:00:00'))
-kolendar_do_prikaz = sg.Input(key="kolendar_input_do", enable_events=True)
-kolendar_do = sg.CalendarButton("Koledar", pad=None, key="kolendardo", format=('%Y-%m-%d 23:59:59'),
-                                target="kolendar_input_do")
-kolendar_layout = [kolendar_od, kolendar_od_prikaz, kolendar_do, kolendar_do_prikaz]
+kolendar_od_prikaz = sg.Input(key="kolendar_input_od", enable_events=True, size=20, visible=False)
+kolendar_od = sg.CalendarButton("Od", pad=None, key="kolendarod", target="kolendar_input_od",
+                                font=('MS Sans Serif', 10, 'bold'), format=('%Y-%m-%d 00:00:00'),
+                                visible=False)
+kolendar_do_prikaz = sg.Input(key="kolendar_input_do", enable_events=True, size=20,visible=False)
+kolendar_do = sg.CalendarButton("Do", pad=None, key="kolendardo", format=('%Y-%m-%d 23:59:59'),
+                                target="kolendar_input_do", visible=False)
+
+kolendar_dnevno_prikaz = sg.Input(key="kolendar_dnevno", enable_events=True, size=15, visible=True)
+kolendar_dnevno = sg.CalendarButton("Datum", pad=None, key="kolendardnevno", target="kolendar_dnevno",
+                                font=('MS Sans Serif', 10, 'bold'), format=('%Y-%m-%d'),
+                                visible=True)
 
 pridobi_podatke = sg.Button("Pokaži podatke", key="podatki")
-header2 = ["Datum","ura", "milisekunde", "TagIndex", "Vrednost"]
+
+
+izbira_vnosa_layout = [pridobi_podatke, izbor_combo, kolendar_od, kolendar_od_prikaz, kolendar_do, kolendar_do_prikaz,
+                       kolendar_dnevno, kolendar_dnevno_prikaz, pridobi_podatke]
+
+izbira_vnosa_frame = sg.Frame("Izbira vnosa", [izbira_vnosa_layout], key="checkbox_frame")
+
+#----------------------
+#      podatki gumb
+#----------------------
+
+
+#------------------
+#     za izbris
+#------------------
+
+header2 = ["Datum", "ura", "milisekunde", "TagIndex", "Vrednost"]
 vrednosti_table = sg.Table(values=rows, headings=header2,
                            auto_size_columns=True, expand_x=True,
                            justification='center', key="tabela_float")
@@ -50,9 +74,18 @@ recepti_table = sg.Table(values=rows, headings=header3,
                          auto_size_columns=True, expand_x=True,
                          justification='center', key="tabela_string")
 
+
+###############################################
+
+#--------------------
+#    izbira recepta
+#--------------------
 recepti_listbox = sg.Listbox(rows,size=(50, 10), key="recepti",
                              enable_events=True)
 progress_bar = sg.ProgressBar(1000, orientation="v", size=(15,20), key="progress")
+
+
+
 
 dnevno_checkbox = sg.Checkbox("Sarže", key="dnevno", visible=False, enable_events=True, default=True)
 bitumen_checkbox = sg.Checkbox("Bitumen", key="bitumen", visible=False, enable_events=True, default=True)
@@ -73,6 +106,7 @@ checkbox_layout=[dnevno_checkbox, bitumen_checkbox, l_filer_checkbox, t_filer_ch
                  mineral_os_checkbox, frezani_checkbox, aditiv_checkbox, k1_checkbox, k2_checkbox,
                  k3_checkbox, k4_checkbox, k5_checkbox, k6_checkbox]
 
+
 checkbox_frame = sg.Frame("Minerali", [checkbox_layout], key="checkbox_frame")
 
 izbor_elementov_header = ["    Datum    ", " Recept ", "Sarže", "Bitumen Rec", "Bitumen Izd", "L Filer Rec",
@@ -88,8 +122,7 @@ izracun_table = sg.Table(values=rows, headings=izbor_elementov_header,
 
 layout = [[naslov_text, povezava_text],
           [driver_text, driver_input, server_text, server_input, baza_text, baza_input, connect_button],
-          [kolendar_layout],
-          [pridobi_podatke],
+          [izbira_vnosa_frame],
           [vrednosti_table, recepti_table],
           [recepti_listbox, progress_bar],
           [vrednost_statusbar],
