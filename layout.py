@@ -1,9 +1,16 @@
 import PySimpleGUI as sg
 
+#------------------------------#
+#      Naslovna vrstica        #
+#------------------------------#
+
 naslov_text = sg.Text("Statistika ", size=75)
 povezava_text = sg.Text("Povezava ni vzpostavljena", text_color="red",
                         font=("Arial", 15), background_color="White", key="povezava")
 
+#------------------------------#
+#      povezava v bazo         #
+#------------------------------#
 driver_text = sg.Text("Driver:")
 driver_input = sg.InputText("SQL Server", size=25, key="driver")
 server_text = sg.Text("Server:")
@@ -12,17 +19,24 @@ baza_text = sg.Text("SQL baza:")
 baza_input = sg.InputText("Test_sql_log", size=20, key="baza")
 connect_button = sg.Button("Poveži se", key="connect")
 
+#------------------------------#
+#      Samo za test            #
+#------------------------------#
 rows = []
 header = ["TagName", "TagIndex", "TagType", "TagDataType"]
 tagi_table = sg.Table(values=rows, headings=header,
                       auto_size_columns=True, expand_x=True, expand_y=True,
                       justification='center', key="tabela_tagov")
 
+#------------------------------#
+#      Izbira datuma           #
+#------------------------------#
+
 kolendar_od_prikaz = sg.Input(key="kolendar_input_od", enable_events=True)
 kolendar_od = sg.CalendarButton("Koledar", pad=None, key="kolendarod", target="kolendar_input_od",
                                 font=('MS Sans Serif', 10, 'bold'), format=('%Y-%m-%d 00:00:00'))
 kolendar_do_prikaz = sg.Input(key="kolendar_input_do", enable_events=True)
-kolendar_do = sg.CalendarButton("Koledar", pad=None, key="kolendardo", format=('%d %B, %Y'),
+kolendar_do = sg.CalendarButton("Koledar", pad=None, key="kolendardo", format=('%Y-%m-%d 23:59:59'),
                                 target="kolendar_input_do")
 kolendar_layout = [kolendar_od, kolendar_od_prikaz, kolendar_do, kolendar_do_prikaz]
 
