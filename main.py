@@ -2,7 +2,7 @@ from copy import deepcopy
 import PySimpleGUI as sg
 import pyodbc
 import pandas as pd
-import datetime
+from datetime import date
 
 from layout import izbor_elementov_header, layout
 
@@ -36,7 +36,7 @@ vse_vrednosti_dolocenega_recepta = {}
 vse_vrednosti_dolocenega_recepta_list = []
 new_list = []
 izbira_prikaza_vrstic = 1   #1 = dnevno, 2 = Datumsko od do, 3 = vse
-dan_za_prikaz = "" #za izbiro 1
+dan_za_prikaz = date.today() #za izbiro 1
 dan_od_za_prikaz = ""
 dan_do_za_prikaz = ""
 
@@ -85,7 +85,7 @@ while True:
             povezava_vzpostavljena = 0
 
         if povezava_vzpostavljena == 1:
-            cursor = povezava.cursor()
+            #cursor = povezava.cursor()
             df = pd.read_sql(sql_ukaz_tags, povezava)
             #print(df)
             #window["tabela_tagov"].update(values=df.values)
@@ -124,6 +124,15 @@ while True:
             print("povezava ni vzpostavljena")
             window["izracun"].update(visible=False)
 
+    elif event == "kolendar_dnevno":
+        dan_za_prikaz = values["kolendar_dnevno"]
+        print(dan_za_prikaz)
+
+    elif event == "kolendar_input_od":
+        dan_od_za_prikaz = values["kolendar_input_od"]
+
+    elif event == "kolendar_input_do":
+        dan_do_za_prikaz = values["kolendar_input_do"]
 #---------------------------------------------------#
 #           gumb poberi recepte                     #
 #---------------------------------------------------#
@@ -142,16 +151,40 @@ while True:
 
             recepti = []
             recepti_vsi_podatki = []
-            if izbira_prikaza_vrstic == 1:
+            if izbira_prikaza_vrstic == 1 and dan_za_prikaz != "":
                 for index, row in df3.iterrows():
+                    print("dan", dan_za_prikaz)
+                    print(row["DateAndTime"].date())
+                    if row["Val"] not in recepti and row["DateAndTime"].date().strftime("%Y-%m-%d") == dan_za_prikaz:
+                        if row["Val"] != None:
+                            recepti.append(row["Val"])
+                            #recepti_vsi_podatki.append(row)
+            elif izbira_prikaza_vrstic == 2:
+                if dan_od_za_prikaz != "" and dan_do_za_prikaz != "":
+                    if dan_od_za_prikaz <= dan_do_za_prikaz:
+                        for index, row in df3.iterrows():
+                            print("dan", dan_za_prikaz)
+                            print(row["DateAndTime"].date())
+                            if (row["Val"] not in recepti and
+                                row["DateAndTime"].date().strftime("%Y-%m-%d") >= dan_od_za_prikaz and
+                                row["DateAndTime"].date().strftime("%Y-%m-%d") <= dan_do_za_prikaz):
+                                if row["Val"] != None:
+                                    recepti.append(row["Val"])
+                    else:
+                        sg.popup("Datumi se ne ujemajo")
+                else:
+                    sg.popup("Prosim izberite\ndatume za prikaz")
+
+
+            elif izbira_prikaza_vrstic == 3:
+                for index, row in df3.iterrows():
+                    print("dan", dan_za_prikaz)
+                    print(row["DateAndTime"].date())
                     if row["Val"] not in recepti:
                         if row["Val"] != None:
                             recepti.append(row["Val"])
-                            recepti_vsi_podatki.append(row)
-
                         #print(recepti)
-
-                window["recepti"].update(values=recepti)
+            window["recepti"].update(values=recepti)
 
 
 
@@ -304,10 +337,26 @@ while True:
         for index, row in df3.iterrows(): #gre čez vse vrstice receptov
 
             #poišče vse zapisane vrednosti receptov in jim shrani datum
-            if row["Val"] == values["recepti"][0]:
-                vse_vrednosti_receptov_po_receptu["DateAndTime"].append(row["DateAndTime"])
-                print("RECEPT IZBRAN")
-                vse_vrstice = vse_vrstice + 1
+            if izbira_prikaza_vrstic == 1:
+                if row["Val"] == values["recepti"][0] and row["DateAndTime"].date().strftime("%Y-%m-%d") == dan_za_prikaz:
+                    vse_vrednosti_receptov_po_receptu["DateAndTime"].append(row["DateAndTime"])
+                    print("RECEPT IZBRAN")
+                    vse_vrstice = vse_vrstice + 1
+            #row["DateAndTime"].date().strftime("%Y-%m-%d") >= dan_od_za_prikaz and
+                               # row["DateAndTime"].date().strftime("%Y-%m-%d") <= dan_do_za_prikaz)
+            elif izbira_prikaza_vrstic == 2:
+                if (row["Val"] == values["recepti"][0] and
+                    row["DateAndTime"].date().strftime("%Y-%m-%d") >= dan_od_za_prikaz and
+                    row["DateAndTime"].date().strftime("%Y-%m-%d") <= dan_do_za_prikaz):
+                    vse_vrednosti_receptov_po_receptu["DateAndTime"].append(row["DateAndTime"])
+                    print("RECEPT IZBRAN")
+                    vse_vrstice = vse_vrstice + 1
+
+            elif izbira_prikaza_vrstic == 3:
+                if row["Val"] == values["recepti"][0]:
+                    vse_vrednosti_receptov_po_receptu["DateAndTime"].append(row["DateAndTime"])
+                    print("RECEPT IZBRAN")
+                    vse_vrstice = vse_vrstice + 1
                 #print(vse_vrednosti_receptov_po_receptu)
 
         trenutno_stetje = 0
@@ -319,13 +368,13 @@ while True:
             for i, row in df2.iterrows():
                 if val == row["DateAndTime"]:
 
-                    if row["TagIndex"] == 1:
+                    if row["TagIndex"] == 0:
                         vse_vrednosti_dolocenega_recepta["datum"].append(str(row["DateAndTime"]))
                         vse_vrednosti_dolocenega_recepta["recept"].append(values["recepti"][0])
-                        vse_vrednosti_dolocenega_recepta["bitumenizd"].append(round(row["Val"],4))
-                        print("dodano")
-                    elif row["TagIndex"] == 0:
                         vse_vrednosti_dolocenega_recepta["sarza"].append(row["Val"])
+                        print("dodano")
+                    elif row["TagIndex"] == 1:
+                        vse_vrednosti_dolocenega_recepta["bitumenizd"].append(round(row["Val"],4))
                     elif row["TagIndex"] == 2:
                         vse_vrednosti_dolocenega_recepta["frezaniizd"].append(round(row["Val"],4))
                     elif row["TagIndex"] == 3:
@@ -393,8 +442,9 @@ while True:
                 new_list[yy][xx]=j
                 yy=yy+1
             xx=xx+1
+            window["izracun"].update(values=new_list)
 
-        window["izracun"].update(values = new_list)
+        #window["izracun"].update(values = new_list)
 
 #------------------------------------------------------
 #

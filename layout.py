@@ -1,5 +1,5 @@
 import PySimpleGUI as sg
-
+from datetime import date
 #------------------------------#
 #      Naslovna vrstica        #
 #------------------------------#
@@ -37,13 +37,14 @@ izbor_combo = sg.Combo(["Dnevno", "Datumsko", "Celoten prikaz"], size=(20,3),
 
 kolendar_od_prikaz = sg.Input(key="kolendar_input_od", enable_events=True, size=20, visible=False)
 kolendar_od = sg.CalendarButton("Od", pad=None, key="kolendarod", target="kolendar_input_od",
-                                font=('MS Sans Serif', 10, 'bold'), format=('%Y-%m-%d 00:00:00'),
+                                font=('MS Sans Serif', 10, 'bold'), format=('%Y-%m-%d'),
                                 visible=False)
 kolendar_do_prikaz = sg.Input(key="kolendar_input_do", enable_events=True, size=20,visible=False)
-kolendar_do = sg.CalendarButton("Do", pad=None, key="kolendardo", format=('%Y-%m-%d 23:59:59'),
+kolendar_do = sg.CalendarButton("Do", pad=None, key="kolendardo", format=('%Y-%m-%d'),
                                 target="kolendar_input_do", visible=False)
 
-kolendar_dnevno_prikaz = sg.Input(key="kolendar_dnevno", enable_events=True, size=15, visible=True)
+kolendar_dnevno_prikaz = sg.Input(key="kolendar_dnevno", enable_events=True, size=15, visible=True,
+                                  default_text=date.today())
 kolendar_dnevno = sg.CalendarButton("Datum", pad=None, key="kolendardnevno", target="kolendar_dnevno",
                                 font=('MS Sans Serif', 10, 'bold'), format=('%Y-%m-%d'),
                                 visible=True)
@@ -52,7 +53,7 @@ pridobi_podatke = sg.Button("Pokaži podatke", key="podatki")
 
 
 izbira_vnosa_layout = [pridobi_podatke, izbor_combo, kolendar_od, kolendar_od_prikaz, kolendar_do, kolendar_do_prikaz,
-                       kolendar_dnevno, kolendar_dnevno_prikaz, pridobi_podatke]
+                       kolendar_dnevno, kolendar_dnevno_prikaz]
 
 izbira_vnosa_frame = sg.Frame("Izbira vnosa", [izbira_vnosa_layout], key="checkbox_frame")
 
