@@ -3,7 +3,6 @@ import PySimpleGUI as sg
 import pyodbc
 import pandas as pd
 from datetime import date
-
 from layout import izbor_elementov_header, layout
 
 sql_ukaz_tags = "SELECT * FROM [Test_sql_log].[dbo].[TagTable]"
@@ -24,6 +23,8 @@ izb_k4 = True
 izb_k5 = True
 izb_k6 = True
 
+skupno_izdozirano = {"sarze":0, "bitumen":0, "lfiler":0, "tfiler":0, "mineralos":0, "frezani":0,
+                     "aditiv":0,"k1":0, "k2":0, "k3":0, "k4":0, "k5":0, "k6":0}
 window = sg.Window('Statistika 0.1', layout, size=(800, 600), resizable=True, finalize=True)
 window.maximize()
 
@@ -146,8 +147,6 @@ while True:
             except pyodbc.Error:
                 print("podatki niso prejeti")
                 podatki_prejeti = 0
-            window["tabela_float"].update(values=df2.values)
-            window["tabela_string"].update(values=df3.values)
 
             recepti = []
             recepti_vsi_podatki = []
@@ -361,6 +360,8 @@ while True:
 
         trenutno_stetje = 0
         window["progress"].update(max=vse_vrstice, current_count = trenutno_stetje)
+        for val in skupno_izdozirano.values():
+            val = 0
 
         for val in vse_vrednosti_receptov_po_receptu["DateAndTime"]:
             trenutno_stetje = trenutno_stetje + 1
@@ -421,6 +422,8 @@ while True:
                         vse_vrednosti_dolocenega_recepta["aditivrec"].append(round(row["Val"],4))
                     elif row["TagIndex"] == 25:
                         vse_vrednosti_dolocenega_recepta["aditivizd"].append(round(row["Val"],4))
+        skupno_izdozirano["sarze"] = trenutno_stetje
+
         del vse_vrednosti_dolocenega_recepta_list
         vse_vrednosti_dolocenega_recepta_list = list(vse_vrednosti_dolocenega_recepta.values())
         dolzina_lista = 0
@@ -444,6 +447,7 @@ while True:
             xx=xx+1
             window["izracun"].update(values=new_list)
 
+        window["skupnosarz"].update(f"Število sarž: {skupno_izdozirano['sarze']}")
         #window["izracun"].update(values = new_list)
 
 #------------------------------------------------------
