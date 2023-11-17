@@ -9,6 +9,149 @@ sql_ukaz_tags = "SELECT * FROM [Test_sql_log].[dbo].[TagTable]"
 sqk_ukaz_floats = "SELECT * FROM [Test_sql_log].[dbo].[FloatTable]"
 sql_ukaz_strings = "SELECT * FROM [Test_sql_log].[dbo].[StringTable]"
 
+povezava_vzpostavljena = 0
+podatki_prejeti = 0
+vse_vrednosti_receptov_po_receptu = {}
+vse_vrednosti_dolocenega_recepta = {}
+vse_vrednosti_dolocenega_recepta_list = []
+new_list = []
+izbira_prikaza_vrstic = 1   #1 = dnevno, 2 = Datumsko od do, 3 = vse
+dan_za_prikaz = date.today() #za izbiro 1
+dan_od_za_prikaz = ""
+dan_do_za_prikaz = ""
+##########
+##########
+##########
+##########
+##########
+##########
+def poberi_in_uredi():
+    trenutno_stetje = 0
+    window["progress"].update(max=vse_vrstice, current_count=trenutno_stetje)
+    for val in skupno_izdozirano.values():
+        val = 0
+
+    for val in vse_vrednosti_receptov_po_receptu["DateAndTime"]:
+        trenutno_stetje = trenutno_stetje + 1
+        window["progress"].update(current_count=trenutno_stetje)
+        for i, row in df2.iterrows():
+            if val == row["DateAndTime"]:
+
+                if row["TagIndex"] == 0:
+                    vse_vrednosti_dolocenega_recepta["datum"].append(str(row["DateAndTime"]))
+
+                    vse_vrednosti_dolocenega_recepta["recept"].append(vse_vrednosti_receptov_po_receptu["recept"][trenutno_stetje-1])
+                    #vse_vrednosti_dolocenega_recepta["recept"].append(rec)
+                    vse_vrednosti_dolocenega_recepta["sarza"].append(row["Val"])
+                    print("dodano")
+                elif row["TagIndex"] == 1:
+                    vse_vrednosti_dolocenega_recepta["bitumenizd"].append(round(row["Val"], 4))
+                    skupno_izdozirano["bitumen"] = skupno_izdozirano["bitumen"] + row["Val"]
+                elif row["TagIndex"] == 2:
+                    vse_vrednosti_dolocenega_recepta["frezaniizd"].append(round(row["Val"], 4))
+                    skupno_izdozirano["frezani"] = skupno_izdozirano["frezani"] + row["Val"]
+                elif row["TagIndex"] == 3:
+                    vse_vrednosti_dolocenega_recepta["k1izd"].append(round(row["Val"], 4))
+                    skupno_izdozirano["k1"] = skupno_izdozirano["k1"] + row["Val"]
+                elif row["TagIndex"] == 4:
+                    vse_vrednosti_dolocenega_recepta["k2izd"].append(round(row["Val"], 4))
+                    skupno_izdozirano["k2"] = skupno_izdozirano["k2"] + row["Val"]
+                elif row["TagIndex"] == 5:
+                    vse_vrednosti_dolocenega_recepta["k3izd"].append(round(row["Val"], 4))
+                    skupno_izdozirano["k3"] = skupno_izdozirano["k3"] + row["Val"]
+                elif row["TagIndex"] == 6:
+                    vse_vrednosti_dolocenega_recepta["k4izd"].append(round(row["Val"], 4))
+                    skupno_izdozirano["k4"] = skupno_izdozirano["k4"] + row["Val"]
+                elif row["TagIndex"] == 7:
+                    vse_vrednosti_dolocenega_recepta["k5izd"].append(round(row["Val"], 4))
+                    skupno_izdozirano["k5"] = skupno_izdozirano["k5"] + row["Val"]
+                elif row["TagIndex"] == 8:
+                    vse_vrednosti_dolocenega_recepta["k6izd"].append(round(row["Val"], 4))
+                    skupno_izdozirano["k6"] = skupno_izdozirano["k6"] + row["Val"]
+                elif row["TagIndex"] == 9:
+                    vse_vrednosti_dolocenega_recepta["mineralosizd"].append(round(row["Val"], 4))
+                    skupno_izdozirano["mineralos"] = skupno_izdozirano["mineralos"] + row["Val"]
+                elif row["TagIndex"] == 10:
+                    vse_vrednosti_dolocenega_recepta["lfilerizd"].append(round(row["Val"], 4))
+                    skupno_izdozirano["lfiler"] = skupno_izdozirano["lfiler"] + row["Val"]
+                elif row["TagIndex"] == 11:
+                    vse_vrednosti_dolocenega_recepta["tfilerizd"].append(round(row["Val"], 4))
+                    skupno_izdozirano["tfiler"] = skupno_izdozirano["tfiler"] + row["Val"]
+                elif row["TagIndex"] == 12:
+                    vse_vrednosti_dolocenega_recepta["bitumenrec"].append(round(row["Val"], 4))
+                elif row["TagIndex"] == 13:
+                    vse_vrednosti_dolocenega_recepta["frezanirec"].append(round(row["Val"], 4))
+                elif row["TagIndex"] == 15:
+                    vse_vrednosti_dolocenega_recepta["k1rec"].append(round(row["Val"], 4))
+                elif row["TagIndex"] == 16:
+                    vse_vrednosti_dolocenega_recepta["k2rec"].append(round(row["Val"], 4))
+                elif row["TagIndex"] == 17:
+                    vse_vrednosti_dolocenega_recepta["k3rec"].append(round(row["Val"], 4))
+                elif row["TagIndex"] == 18:
+                    vse_vrednosti_dolocenega_recepta["k4rec"].append(round(row["Val"], 4))
+                elif row["TagIndex"] == 19:
+                    vse_vrednosti_dolocenega_recepta["k5rec"].append(round(row["Val"], 4))
+                elif row["TagIndex"] == 20:
+                    vse_vrednosti_dolocenega_recepta["k6rec"].append(round(row["Val"], 4))
+                elif row["TagIndex"] == 21:
+                    vse_vrednosti_dolocenega_recepta["lfilerrec"].append(round(row["Val"], 4))
+                elif row["TagIndex"] == 22:
+                    vse_vrednosti_dolocenega_recepta["mineralosrec"].append(round(row["Val"], 4))
+                elif row["TagIndex"] == 23:
+                    vse_vrednosti_dolocenega_recepta["tfilerrec"].append(round(row["Val"], 4))
+                elif row["TagIndex"] == 24:
+                    vse_vrednosti_dolocenega_recepta["aditivrec"].append(round(row["Val"], 4))
+                elif row["TagIndex"] == 25:
+                    vse_vrednosti_dolocenega_recepta["aditivizd"].append(round(row["Val"], 4))
+                    skupno_izdozirano["aditiv"] = skupno_izdozirano["aditiv"] + row["Val"]
+    skupno_izdozirano["sarze"] = trenutno_stetje
+
+    #del vse_vrednosti_dolocenega_recepta_list
+    vse_vrednosti_dolocenega_recepta_list = list(vse_vrednosti_dolocenega_recepta.values())
+    dolzina_lista = 0
+    for i in vse_vrednosti_dolocenega_recepta_list[0]:
+        dolzina_lista = dolzina_lista + 1
+
+    #del new_list
+    new_list = [["0" for x in range(len(vse_vrednosti_dolocenega_recepta_list))] for x in range(dolzina_lista)]
+    print("_________________________________________________________________________")
+    print(vse_vrednosti_dolocenega_recepta_list)
+    print(dolzina_lista)
+    print(len(vse_vrednosti_dolocenega_recepta_list))
+    xx = 0
+    yy = 0
+    print(new_list)
+    for i in vse_vrednosti_dolocenega_recepta_list:
+        yy = 0
+        for j in i:
+            new_list[yy][xx] = j
+            yy = yy + 1
+        xx = xx + 1
+        window["izracun"].update(values=new_list)
+
+    window["skupnosarz"].update(f"Število sarž: {skupno_izdozirano['sarze']}")
+    window["skupnobitumen"].update(f"Bitumen: {round(skupno_izdozirano['bitumen'], 1)} Kg")
+    window["skupnolfiler"].update(f"Lastni filer: {round(skupno_izdozirano['lfiler'], 1)} Kg")
+    window["skupnotfiler"].update(f"Tuj filer: {round(skupno_izdozirano['tfiler'], 1)} Kg")
+    window["skupnofrezani"].update(f"Frezani: {round(skupno_izdozirano['frezani'], 1)} Kg")
+    window["skupnoaditiv"].update(f"Aditiv: {round(skupno_izdozirano['aditiv'], 1)} Kg")
+    window["skupnomineral"].update(f"Obhod sita: {round(skupno_izdozirano['mineralos'], 1)} Kg")
+    window["skupnok1"].update(f"K1: {round(skupno_izdozirano['k1'], 1)} Kg")
+    window["skupnok2"].update(f"K2: {round(skupno_izdozirano['k2'], 1)} Kg")
+    window["skupnok3"].update(f"K3: {round(skupno_izdozirano['k3'], 1)} Kg")
+    window["skupnok4"].update(f"K4: {round(skupno_izdozirano['k4'], 1)} Kg")
+    window["skupnok5"].update(f"K5: {round(skupno_izdozirano['k5'], 1)} Kg")
+    window["skupnok6"].update(f"K6: {round(skupno_izdozirano['k6'], 1)} Kg")
+    # window["izracun"].update(values = new_list)
+##########
+##########
+##########
+##########
+##########
+##########
+##########
+##########
+##########
 izb_sarze = True
 izb_bitumen = True
 izb_lfiler = True
@@ -30,16 +173,7 @@ window.maximize()
 
 prikaz_table = window["izracun"]
 
-povezava_vzpostavljena = 0
-podatki_prejeti = 0
-vse_vrednosti_receptov_po_receptu = {}
-vse_vrednosti_dolocenega_recepta = {}
-vse_vrednosti_dolocenega_recepta_list = []
-new_list = []
-izbira_prikaza_vrstic = 1   #1 = dnevno, 2 = Datumsko od do, 3 = vse
-dan_za_prikaz = date.today() #za izbiro 1
-dan_od_za_prikaz = ""
-dan_do_za_prikaz = ""
+
 
 def dodaj_vrstico(val = ""):
     displaycolumns = deepcopy(izbor_elementov_header)
@@ -323,9 +457,9 @@ while True:
 #                       RECEPTI                       #
 #-----------------------------------------------------#
     elif event == "recepti":
-        del vse_vrednosti_receptov_po_receptu
-        vse_vrednosti_receptov_po_receptu = {"DateAndTime":[]}#pd.DataFrame({"DateAndTime":[],"Militrm":[],"TagIndex":[],"Val":[],"Status":[],"Marker":[]})
-        del vse_vrednosti_dolocenega_recepta
+        #del vse_vrednosti_receptov_po_receptu
+        vse_vrednosti_receptov_po_receptu = {"DateAndTime":[], "recept":[]}#pd.DataFrame({"DateAndTime":[],"Militrm":[],"TagIndex":[],"Val":[],"Status":[],"Marker":[]})
+        #del vse_vrednosti_dolocenega_recepta
         vse_vrednosti_dolocenega_recepta = {"datum":[], "recept":[],"sarza":[], "bitumenrec":[],
                                             "bitumenizd":[], "lfilerrec":[], "lfilerizd":[], "tfilerrec":[], "tfilerizd":[],
                                             "mineralosrec":[], "mineralosizd":[],"frezanirec":[], "frezaniizd":[],
@@ -340,6 +474,7 @@ while True:
             if izbira_prikaza_vrstic == 1:
                 if row["Val"] == values["recepti"][0] and row["DateAndTime"].date().strftime("%Y-%m-%d") == dan_za_prikaz:
                     vse_vrednosti_receptov_po_receptu["DateAndTime"].append(row["DateAndTime"])
+                    vse_vrednosti_receptov_po_receptu["recept"].append(row["Val"])
                     print("RECEPT IZBRAN")
                     vse_vrstice = vse_vrstice + 1
             #row["DateAndTime"].date().strftime("%Y-%m-%d") >= dan_od_za_prikaz and
@@ -349,135 +484,64 @@ while True:
                     row["DateAndTime"].date().strftime("%Y-%m-%d") >= dan_od_za_prikaz and
                     row["DateAndTime"].date().strftime("%Y-%m-%d") <= dan_do_za_prikaz):
                     vse_vrednosti_receptov_po_receptu["DateAndTime"].append(row["DateAndTime"])
+                    vse_vrednosti_receptov_po_receptu["recept"].append(row["Val"])
                     print("RECEPT IZBRAN")
                     vse_vrstice = vse_vrstice + 1
 
             elif izbira_prikaza_vrstic == 3:
                 if row["Val"] == values["recepti"][0]:
                     vse_vrednosti_receptov_po_receptu["DateAndTime"].append(row["DateAndTime"])
+                    vse_vrednosti_receptov_po_receptu["recept"].append(row["Val"])
                     print("RECEPT IZBRAN")
                     vse_vrstice = vse_vrstice + 1
                 #print(vse_vrednosti_receptov_po_receptu)
 ############################################################################################################
-        trenutno_stetje = 0
-        window["progress"].update(max=vse_vrstice, current_count = trenutno_stetje)
-        for val in skupno_izdozirano.values():
-            val = 0
-
-        for val in vse_vrednosti_receptov_po_receptu["DateAndTime"]:
-            trenutno_stetje = trenutno_stetje + 1
-            window["progress"].update(current_count=trenutno_stetje)
-            for i, row in df2.iterrows():
-                if val == row["DateAndTime"]:
-
-                    if row["TagIndex"] == 0:
-                        vse_vrednosti_dolocenega_recepta["datum"].append(str(row["DateAndTime"]))
-                        vse_vrednosti_dolocenega_recepta["recept"].append(values["recepti"][0])
-                        vse_vrednosti_dolocenega_recepta["sarza"].append(row["Val"])
-                        print("dodano")
-                    elif row["TagIndex"] == 1:
-                        vse_vrednosti_dolocenega_recepta["bitumenizd"].append(round(row["Val"],4))
-                        skupno_izdozirano["bitumen"] = skupno_izdozirano["bitumen"] + row["Val"]
-                    elif row["TagIndex"] == 2:
-                        vse_vrednosti_dolocenega_recepta["frezaniizd"].append(round(row["Val"],4))
-                        skupno_izdozirano["frezani"] = skupno_izdozirano["frezani"] + row["Val"]
-                    elif row["TagIndex"] == 3:
-                        vse_vrednosti_dolocenega_recepta["k1izd"].append(round(row["Val"],4))
-                        skupno_izdozirano["k1"] = skupno_izdozirano["k1"] + row["Val"]
-                    elif row["TagIndex"] == 4:
-                        vse_vrednosti_dolocenega_recepta["k2izd"].append(round(row["Val"],4))
-                        skupno_izdozirano["k2"] = skupno_izdozirano["k2"] + row["Val"]
-                    elif row["TagIndex"] == 5:
-                        vse_vrednosti_dolocenega_recepta["k3izd"].append(round(row["Val"],4))
-                        skupno_izdozirano["k3"] = skupno_izdozirano["k3"] + row["Val"]
-                    elif row["TagIndex"] == 6:
-                        vse_vrednosti_dolocenega_recepta["k4izd"].append(round(row["Val"],4))
-                        skupno_izdozirano["k4"] = skupno_izdozirano["k4"] + row["Val"]
-                    elif row["TagIndex"] == 7:
-                        vse_vrednosti_dolocenega_recepta["k5izd"].append(round(row["Val"],4))
-                        skupno_izdozirano["k5"] = skupno_izdozirano["k5"] + row["Val"]
-                    elif row["TagIndex"] == 8:
-                        vse_vrednosti_dolocenega_recepta["k6izd"].append(round(row["Val"],4))
-                        skupno_izdozirano["k6"] = skupno_izdozirano["k6"] + row["Val"]
-                    elif row["TagIndex"] == 9:
-                        vse_vrednosti_dolocenega_recepta["mineralosizd"].append(round(row["Val"],4))
-                        skupno_izdozirano["mineralos"] = skupno_izdozirano["mineralos"] + row["Val"]
-                    elif row["TagIndex"] == 10:
-                        vse_vrednosti_dolocenega_recepta["lfilerizd"].append(round(row["Val"],4))
-                        skupno_izdozirano["lfiler"] = skupno_izdozirano["lfiler"] + row["Val"]
-                    elif row["TagIndex"] == 11:
-                        vse_vrednosti_dolocenega_recepta["tfilerizd"].append(round(row["Val"],4))
-                        skupno_izdozirano["tfiler"] = skupno_izdozirano["tfiler"] + row["Val"]
-                    elif row["TagIndex"] == 12:
-                        vse_vrednosti_dolocenega_recepta["bitumenrec"].append(round(row["Val"],4))
-                    elif row["TagIndex"] == 13:
-                        vse_vrednosti_dolocenega_recepta["frezanirec"].append(round(row["Val"],4))
-                    elif row["TagIndex"] == 15:
-                        vse_vrednosti_dolocenega_recepta["k1rec"].append(round(row["Val"],4))
-                    elif row["TagIndex"] == 16:
-                        vse_vrednosti_dolocenega_recepta["k2rec"].append(round(row["Val"],4))
-                    elif row["TagIndex"] == 17:
-                        vse_vrednosti_dolocenega_recepta["k3rec"].append(round(row["Val"],4))
-                    elif row["TagIndex"] == 18:
-                        vse_vrednosti_dolocenega_recepta["k4rec"].append(round(row["Val"],4))
-                    elif row["TagIndex"] == 19:
-                        vse_vrednosti_dolocenega_recepta["k5rec"].append(round(row["Val"],4))
-                    elif row["TagIndex"] == 20:
-                        vse_vrednosti_dolocenega_recepta["k6rec"].append(round(row["Val"],4))
-                    elif row["TagIndex"] == 21:
-                        vse_vrednosti_dolocenega_recepta["lfilerrec"].append(round(row["Val"],4))
-                    elif row["TagIndex"] == 22:
-                        vse_vrednosti_dolocenega_recepta["mineralosrec"].append(round(row["Val"],4))
-                    elif row["TagIndex"] == 23:
-                        vse_vrednosti_dolocenega_recepta["tfilerrec"].append(round(row["Val"],4))
-                    elif row["TagIndex"] == 24:
-                        vse_vrednosti_dolocenega_recepta["aditivrec"].append(round(row["Val"],4))
-                    elif row["TagIndex"] == 25:
-                        vse_vrednosti_dolocenega_recepta["aditivizd"].append(round(row["Val"],4))
-                        skupno_izdozirano["aditiv"] = skupno_izdozirano["aditiv"] + row["Val"]
-        skupno_izdozirano["sarze"] = trenutno_stetje
-
-        del vse_vrednosti_dolocenega_recepta_list
-        vse_vrednosti_dolocenega_recepta_list = list(vse_vrednosti_dolocenega_recepta.values())
-        dolzina_lista = 0
-        for i in vse_vrednosti_dolocenega_recepta_list[0]:
-            dolzina_lista = dolzina_lista + 1
-
-        del new_list
-        new_list = [["0" for x in range(len(vse_vrednosti_dolocenega_recepta_list))] for x in range(dolzina_lista)]
-        print("_________________________________________________________________________")
-        print(vse_vrednosti_dolocenega_recepta_list)
-        print(dolzina_lista)
-        print(len(vse_vrednosti_dolocenega_recepta_list))
-        xx = 0
-        yy = 0
-        print(new_list)
-        for i in vse_vrednosti_dolocenega_recepta_list:
-            yy = 0
-            for j in i:
-                new_list[yy][xx]=j
-                yy=yy+1
-            xx=xx+1
-            window["izracun"].update(values=new_list)
-
-        window["skupnosarz"].update(f"Število sarž: {skupno_izdozirano['sarze']}")
-        window["skupnobitumen"].update(f"Bitumen: {round(skupno_izdozirano['bitumen'],1)} Kg")
-        window["skupnolfiler"].update(f"Lastni filer: {round(skupno_izdozirano['lfiler'], 1)} Kg")
-        window["skupnotfiler"].update(f"Tuj filer: {round(skupno_izdozirano['tfiler'], 1)} Kg")
-        window["skupnofrezani"].update(f"Frezani: {round(skupno_izdozirano['frezani'], 1)} Kg")
-        window["skupnoaditiv"].update(f"Aditiv: {round(skupno_izdozirano['aditiv'], 1)} Kg")
-        window["skupnomineral"].update(f"Obhod sita: {round(skupno_izdozirano['mineralos'], 1)} Kg")
-        window["skupnok1"].update(f"K1: {round(skupno_izdozirano['k1'], 1)} Kg")
-        window["skupnok2"].update(f"K2: {round(skupno_izdozirano['k2'], 1)} Kg")
-        window["skupnok3"].update(f"K3: {round(skupno_izdozirano['k3'], 1)} Kg")
-        window["skupnok4"].update(f"K4: {round(skupno_izdozirano['k4'], 1)} Kg")
-        window["skupnok5"].update(f"K5: {round(skupno_izdozirano['k5'], 1)} Kg")
-        window["skupnok6"].update(f"K6: {round(skupno_izdozirano['k6'], 1)} Kg")
-        #window["izracun"].update(values = new_list)
-
+        poberi_in_uredi()
 #------------------------------------------------------
 #
 #------------------------------------------------------
+    elif event == "poberivse":
+        vse_vrednosti_receptov_po_receptu = {"DateAndTime": [], "recept": []}
+        # pd.DataFrame({"DateAndTime":[],"Militrm":[],"TagIndex":[],"Val":[],"Status":[],"Marker":[]})
+        # del vse_vrednosti_dolocenega_recepta
+        vse_vrednosti_dolocenega_recepta = {"datum": [], "recept": [], "sarza": [], "bitumenrec": [],
+                                            "bitumenizd": [], "lfilerrec": [], "lfilerizd": [], "tfilerrec": [],
+                                            "tfilerizd": [],
+                                            "mineralosrec": [], "mineralosizd": [], "frezanirec": [], "frezaniizd": [],
+                                            "aditivrec": [], "aditivizd": [], "k1rec": [], "k1izd": [], "k2rec": [],
+                                            "k2izd": [],
+                                            "k3rec": [], "k3izd": [], "k4rec": [], "k4izd": [], "k5rec": [],
+                                            "k5izd": [],
+                                            "k6rec": [], "k6izd": []}
+        vse_vrstice = 0
+        for index, row in df3.iterrows():  # gre čez vse vrstice receptov
+
+            # poišče vse zapisane vrednosti receptov in jim shrani datum
+            if izbira_prikaza_vrstic == 1:
+                if row["DateAndTime"].date().strftime("%Y-%m-%d") == dan_za_prikaz:
+                    vse_vrednosti_receptov_po_receptu["DateAndTime"].append(row["DateAndTime"])
+                    vse_vrednosti_receptov_po_receptu["recept"].append(row["Val"])
+                    print("RECEPT IZBRAN")
+                    vse_vrstice = vse_vrstice + 1
+            # row["DateAndTime"].date().strftime("%Y-%m-%d") >= dan_od_za_prikaz and
+            # row["DateAndTime"].date().strftime("%Y-%m-%d") <= dan_do_za_prikaz)
+            elif izbira_prikaza_vrstic == 2:
+                if (row["DateAndTime"].date().strftime("%Y-%m-%d") >= dan_od_za_prikaz and
+                    row["DateAndTime"].date().strftime("%Y-%m-%d") <= dan_do_za_prikaz):
+                    vse_vrednosti_receptov_po_receptu["DateAndTime"].append(row["DateAndTime"])
+                    vse_vrednosti_receptov_po_receptu["recept"].append(row["Val"])
+                    print("RECEPT IZBRAN")
+                    vse_vrstice = vse_vrstice + 1
+
+            elif izbira_prikaza_vrstic == 3:
+                vse_vrednosti_receptov_po_receptu["DateAndTime"].append(row["DateAndTime"])
+                vse_vrednosti_receptov_po_receptu["recept"].append(row["Val"])
+                print("RECEPT IZBRAN")
+                vse_vrstice = vse_vrstice + 1
+                # print(vse_vrednosti_receptov_po_receptu)
+        ############################################################################################################
+        poberi_in_uredi()
+
     elif event == "izborcombo":
         if values["izborcombo"] == "Dnevno":
             izbira_prikaza_vrstic = 1
@@ -537,3 +601,121 @@ while True:
         break
 
 window.close()
+"""
+def poberi_in_uredi():
+    trenutno_stetje = 0
+    window["progress"].update(max=vse_vrstice, current_count=trenutno_stetje)
+    for val in skupno_izdozirano.values():
+        val = 0
+
+    for val in vse_vrednosti_receptov_po_receptu["DateAndTime"]:
+        trenutno_stetje = trenutno_stetje + 1
+        window["progress"].update(current_count=trenutno_stetje)
+        for i, row in df2.iterrows():
+            if val == row["DateAndTime"]:
+
+                if row["TagIndex"] == 0:
+                    vse_vrednosti_dolocenega_recepta["datum"].append(str(row["DateAndTime"]))
+                    vse_vrednosti_dolocenega_recepta["recept"].append(values["recepti"][0])
+                    vse_vrednosti_dolocenega_recepta["sarza"].append(row["Val"])
+                    print("dodano")
+                elif row["TagIndex"] == 1:
+                    vse_vrednosti_dolocenega_recepta["bitumenizd"].append(round(row["Val"], 4))
+                    skupno_izdozirano["bitumen"] = skupno_izdozirano["bitumen"] + row["Val"]
+                elif row["TagIndex"] == 2:
+                    vse_vrednosti_dolocenega_recepta["frezaniizd"].append(round(row["Val"], 4))
+                    skupno_izdozirano["frezani"] = skupno_izdozirano["frezani"] + row["Val"]
+                elif row["TagIndex"] == 3:
+                    vse_vrednosti_dolocenega_recepta["k1izd"].append(round(row["Val"], 4))
+                    skupno_izdozirano["k1"] = skupno_izdozirano["k1"] + row["Val"]
+                elif row["TagIndex"] == 4:
+                    vse_vrednosti_dolocenega_recepta["k2izd"].append(round(row["Val"], 4))
+                    skupno_izdozirano["k2"] = skupno_izdozirano["k2"] + row["Val"]
+                elif row["TagIndex"] == 5:
+                    vse_vrednosti_dolocenega_recepta["k3izd"].append(round(row["Val"], 4))
+                    skupno_izdozirano["k3"] = skupno_izdozirano["k3"] + row["Val"]
+                elif row["TagIndex"] == 6:
+                    vse_vrednosti_dolocenega_recepta["k4izd"].append(round(row["Val"], 4))
+                    skupno_izdozirano["k4"] = skupno_izdozirano["k4"] + row["Val"]
+                elif row["TagIndex"] == 7:
+                    vse_vrednosti_dolocenega_recepta["k5izd"].append(round(row["Val"], 4))
+                    skupno_izdozirano["k5"] = skupno_izdozirano["k5"] + row["Val"]
+                elif row["TagIndex"] == 8:
+                    vse_vrednosti_dolocenega_recepta["k6izd"].append(round(row["Val"], 4))
+                    skupno_izdozirano["k6"] = skupno_izdozirano["k6"] + row["Val"]
+                elif row["TagIndex"] == 9:
+                    vse_vrednosti_dolocenega_recepta["mineralosizd"].append(round(row["Val"], 4))
+                    skupno_izdozirano["mineralos"] = skupno_izdozirano["mineralos"] + row["Val"]
+                elif row["TagIndex"] == 10:
+                    vse_vrednosti_dolocenega_recepta["lfilerizd"].append(round(row["Val"], 4))
+                    skupno_izdozirano["lfiler"] = skupno_izdozirano["lfiler"] + row["Val"]
+                elif row["TagIndex"] == 11:
+                    vse_vrednosti_dolocenega_recepta["tfilerizd"].append(round(row["Val"], 4))
+                    skupno_izdozirano["tfiler"] = skupno_izdozirano["tfiler"] + row["Val"]
+                elif row["TagIndex"] == 12:
+                    vse_vrednosti_dolocenega_recepta["bitumenrec"].append(round(row["Val"], 4))
+                elif row["TagIndex"] == 13:
+                    vse_vrednosti_dolocenega_recepta["frezanirec"].append(round(row["Val"], 4))
+                elif row["TagIndex"] == 15:
+                    vse_vrednosti_dolocenega_recepta["k1rec"].append(round(row["Val"], 4))
+                elif row["TagIndex"] == 16:
+                    vse_vrednosti_dolocenega_recepta["k2rec"].append(round(row["Val"], 4))
+                elif row["TagIndex"] == 17:
+                    vse_vrednosti_dolocenega_recepta["k3rec"].append(round(row["Val"], 4))
+                elif row["TagIndex"] == 18:
+                    vse_vrednosti_dolocenega_recepta["k4rec"].append(round(row["Val"], 4))
+                elif row["TagIndex"] == 19:
+                    vse_vrednosti_dolocenega_recepta["k5rec"].append(round(row["Val"], 4))
+                elif row["TagIndex"] == 20:
+                    vse_vrednosti_dolocenega_recepta["k6rec"].append(round(row["Val"], 4))
+                elif row["TagIndex"] == 21:
+                    vse_vrednosti_dolocenega_recepta["lfilerrec"].append(round(row["Val"], 4))
+                elif row["TagIndex"] == 22:
+                    vse_vrednosti_dolocenega_recepta["mineralosrec"].append(round(row["Val"], 4))
+                elif row["TagIndex"] == 23:
+                    vse_vrednosti_dolocenega_recepta["tfilerrec"].append(round(row["Val"], 4))
+                elif row["TagIndex"] == 24:
+                    vse_vrednosti_dolocenega_recepta["aditivrec"].append(round(row["Val"], 4))
+                elif row["TagIndex"] == 25:
+                    vse_vrednosti_dolocenega_recepta["aditivizd"].append(round(row["Val"], 4))
+                    skupno_izdozirano["aditiv"] = skupno_izdozirano["aditiv"] + row["Val"]
+    skupno_izdozirano["sarze"] = trenutno_stetje
+
+    del vse_vrednosti_dolocenega_recepta_list
+    vse_vrednosti_dolocenega_recepta_list = list(vse_vrednosti_dolocenega_recepta.values())
+    dolzina_lista = 0
+    for i in vse_vrednosti_dolocenega_recepta_list[0]:
+        dolzina_lista = dolzina_lista + 1
+
+    del new_list
+    new_list = [["0" for x in range(len(vse_vrednosti_dolocenega_recepta_list))] for x in range(dolzina_lista)]
+    print("_________________________________________________________________________")
+    print(vse_vrednosti_dolocenega_recepta_list)
+    print(dolzina_lista)
+    print(len(vse_vrednosti_dolocenega_recepta_list))
+    xx = 0
+    yy = 0
+    print(new_list)
+    for i in vse_vrednosti_dolocenega_recepta_list:
+        yy = 0
+        for j in i:
+            new_list[yy][xx] = j
+            yy = yy + 1
+        xx = xx + 1
+        window["izracun"].update(values=new_list)
+
+    window["skupnosarz"].update(f"Število sarž: {skupno_izdozirano['sarze']}")
+    window["skupnobitumen"].update(f"Bitumen: {round(skupno_izdozirano['bitumen'], 1)} Kg")
+    window["skupnolfiler"].update(f"Lastni filer: {round(skupno_izdozirano['lfiler'], 1)} Kg")
+    window["skupnotfiler"].update(f"Tuj filer: {round(skupno_izdozirano['tfiler'], 1)} Kg")
+    window["skupnofrezani"].update(f"Frezani: {round(skupno_izdozirano['frezani'], 1)} Kg")
+    window["skupnoaditiv"].update(f"Aditiv: {round(skupno_izdozirano['aditiv'], 1)} Kg")
+    window["skupnomineral"].update(f"Obhod sita: {round(skupno_izdozirano['mineralos'], 1)} Kg")
+    window["skupnok1"].update(f"K1: {round(skupno_izdozirano['k1'], 1)} Kg")
+    window["skupnok2"].update(f"K2: {round(skupno_izdozirano['k2'], 1)} Kg")
+    window["skupnok3"].update(f"K3: {round(skupno_izdozirano['k3'], 1)} Kg")
+    window["skupnok4"].update(f"K4: {round(skupno_izdozirano['k4'], 1)} Kg")
+    window["skupnok5"].update(f"K5: {round(skupno_izdozirano['k5'], 1)} Kg")
+    window["skupnok6"].update(f"K6: {round(skupno_izdozirano['k6'], 1)} Kg")
+    # window["izracun"].update(values = new_list)
+    """
