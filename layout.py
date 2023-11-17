@@ -71,9 +71,7 @@ izbira_vnosa_frame = sg.Frame("Izbira vnosa", [izbira_vnosa_layout], key="checkb
 recepti_listbox = sg.Listbox(rows,size=(50, 10), key="recepti",
                              enable_events=True)
 progress_bar = sg.ProgressBar(1000, orientation="v", size=(15,20), key="progress")
-
-
-
+poberi_vse_button =sg.Button("Vsi recepti", key="poberivse")
 
 dnevno_checkbox = sg.Checkbox("Sarže", key="dnevno", visible=False, enable_events=True, default=True, font=("Arial", 15))
 bitumen_checkbox = sg.Checkbox("Bitumen", key="bitumen", visible=False, enable_events=True, default=True, font=("Arial", 15))
@@ -136,14 +134,14 @@ skupno_k5_text = sg.Text("K5: ", text_color="Black",
 skupno_k6_text = sg.Text("K6: ", text_color="Black",
                         font=("Arial", 15), background_color="LightGrey", key="skupnok6")
 
-skupno_izdozirano_layout = [[skupno_izdozirano_text],st_sarz_text,skupno_bitumen_text, skupno_lfiler_text,
-                            skupno_tfiler_text, skupno_frezani_text, skupno_aditiv_text, skupno_mineral_text,
+skupno_izdozirano_layout = [[skupno_izdozirano_text],[st_sarz_text,skupno_bitumen_text, skupno_lfiler_text,
+                            skupno_tfiler_text, skupno_frezani_text, skupno_aditiv_text, skupno_mineral_text],
                             skupno_k1_text, skupno_k2_text, skupno_k3_text, skupno_k4_text, skupno_k5_text, skupno_k6_text]
 
 layout = [[naslov_text, povezava_text],
           [driver_text, driver_input, server_text, server_input, baza_text, baza_input, connect_button],
           [izbira_vnosa_frame],
-          [recepti_listbox, progress_bar],
+          [recepti_listbox, progress_bar, poberi_vse_button],
           [vrednost_statusbar],
           [checkbox_frame],
           [izracun_table],
